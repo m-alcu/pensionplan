@@ -1,0 +1,21 @@
+# build output
+build/
+build-asan/
+
+# Claude Code local settings
+.claude/
+
+imgui.ini
+
+# Datos personales. Los informes del INSS llevan nombre y DNI, y el fichero del
+# pensionista contiene el historial de cotizacion completo: nada de esto debe
+# subirse. El ejemplo de examples/ es ficticio y si se versiona.
+assets/
+config.ini
+data/
+*.dat
+!examples/*.dat
+
+# Python
+__pycache__/
+*.pyc
