@@ -814,6 +814,17 @@ ConvenioPlan planConvenio(const Params& p, const std::vector<ScenarioPeriod>& sc
     plan.totalCost = best.convenioTotalCost;
     plan.firstMonthlyCost = best.convenioFirstMonthlyCost;
     plan.saving = std::max(0.0, plan.costIfRunToRetirement - plan.totalCost);
+
+    plan.marginOverCap = best.baseReguladora - best.effectiveCap;
+    if (p.applyDualBaseReguladora && best.optionBWins) {
+        Params single = p;
+        single.applyDualBaseReguladora = false;
+        Result alone = compute(single, scenarioStoppingAt(scenario, stopWork, p.retirement, true,
+                                                          plan.minimumBase, convenioGrowthPct,
+                                                          until));
+        plan.lossWithoutDualRule = best.pension - alone.pension;
+        plan.dependsOnDualRule = plan.lossWithoutDualRule > 0.01;
+    }
     return plan;
 }
 

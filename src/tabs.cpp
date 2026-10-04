@@ -1147,6 +1147,9 @@ void drawConvenioTab(App& app) {
                 : "por encima del suelo: estos meses sí pesan en la base reguladora");
         row("Cuota mensual el primer año", eur(chosen.firstMonthlyCost) + " €");
         row("Coste total hasta la jubilación", eur(chosen.totalCost, 0) + " €", &kWarn);
+        row("Margen sobre el tope", eur(chosen.marginOverCap) + " €",
+            chosen.marginOverCap > 100 ? &kGood : &kWarn,
+            chosen.marginOverCap > 100 ? "holgado" : "ajustado: cualquier desviación lo rompe");
         row("Pensión con ese convenio", eur(chosen.pensionWithConvenio) + " €/mes",
             chosen.pensionWithConvenio >= target - 0.01 ? &kGood : &kBad,
             chosen.pensionWithConvenio >= target - 0.01 ? "intacta" : "por debajo del objetivo");
@@ -1181,6 +1184,18 @@ void drawConvenioTab(App& app) {
                     "comparando su coste total con lo que evita perder");
         }
         ImGui::EndTable();
+    }
+    if (chosen.dependsOnDualRule) {
+        ImGui::PushStyleColor(ImGuiCol_Text, kBad);
+        wrapped("Este plan sólo llega al tope gracias al cómputo dual: la opción A, por sí sola, "
+                "se queda en %s € de base reguladora. Es la opción B la que descarta los peores "
+                "meses —precisamente los del convenio— y salva el resultado. Si esa disposición "
+                "transitoria cambiara, o si el INSS no la aplicase así, perdería %s €/mes. "
+                "Cesar más tarde elimina esa dependencia.",
+                eur(app.result.optionA.value).c_str(),
+                eur(chosen.lossWithoutDualRule).c_str());
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
     }
     if (!chosen.retiresAt65WithoutConvenio) {
         ImGui::PushStyleColor(ImGuiCol_Text, kWarn);

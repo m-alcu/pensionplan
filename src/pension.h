@@ -310,6 +310,13 @@ struct ConvenioPlan {
     double costIfRunToRetirement = 0.0;
     double saving = 0.0;  // what cancelling early saves
 
+    // How much room is left over the cap, and whether the plan only clears it
+    // because the dual rule of DT 40.a discards its worst months. A plan that
+    // leans on that is a plan betting on one transitional provision.
+    double marginOverCap = 0.0;
+    bool dependsOnDualRule = false;
+    double lossWithoutDualRule = 0.0;
+
     double pensionWithConvenio = 0.0;
     double pensionWithoutConvenio = 0.0;
     long daysWithConvenio = 0;
